@@ -4,7 +4,16 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class MainTest {
 
@@ -44,17 +53,19 @@ public class MainTest {
     @Test
     public void streamFilter() {
 
-        stuff.stream()
+        List<String> result = stuff.stream()
                 .filter(item -> item.startsWith("B"))
-                .forEach(System.out::println);
+                .collect(Collectors.toList()); // use of collector to convert stream back to list
+
+        assertThat(result, is(Arrays.asList("Bag", "Ball")));
     }
 
     @Test
     public void streamFindFirst() {
 
-        stuff.stream()
-                .findFirst()
-                .ifPresent(System.out::println);
+        Optional<String> first = stuff.stream().findFirst();
+
+        assertThat(first, is(Optional.of("Phone")));
     }
 
     @Test
@@ -80,5 +91,45 @@ public class MainTest {
                 .flatMap(i -> Arrays.asList(i.split("")).stream())
                 .forEach(System.out::println);
     }
-    
+
+    @Test
+    public void greetUsingHighOrderFunction() {
+
+        String greeting = greet(() -> "John");
+
+        assertThat(greeting, is("Hello John"));
+    }
+
+    @Test
+    public void greetUsingFirstClassFunction() {
+
+        Function<String, String> greet = (name) -> "Hello " + name;
+
+        assertThat(greet.apply("John"), is("Hello John"));
+    }
+
+    @Test
+    public void functionalInterfaceToCheckIfSomethingCanBeLogged() {
+
+        CheckLog<String> checker = s -> s.contains("p");
+
+        assertTrue(checker.check("pole"));
+        assertFalse(checker.check("Fish"));
+        assertTrue(checker.check("Bop"));
+    }
+
+    // Higher order function
+    private String greet(Supplier<String> name) {
+        return "Hello " + name.get();
+    }
+
+    // Function returning Optional
+    private Optional<String> v(String text) {
+        if (text.contains(".")) {
+            return Optional.empty();
+        } else {
+            return Optional.of("*" + text);
+        }
+    }
+
 }
