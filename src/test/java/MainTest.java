@@ -100,6 +100,11 @@ public class MainTest {
         assertThat(greeting, is("Hello John"));
     }
 
+    // Higher order function
+    private String greet(Supplier<String> name) {
+        return "Hello " + name.get();
+    }
+
     @Test
     public void greetUsingFirstClassFunction() {
 
@@ -118,18 +123,25 @@ public class MainTest {
         assertTrue(checker.check("Bop"));
     }
 
-    // Higher order function
-    private String greet(Supplier<String> name) {
-        return "Hello " + name.get();
+    @Test
+    public void optionalReturningFunction() {
+
+        Optional<String> result1 = prependStar("red");
+        Optional<String> result2 = prependStar("red.");
+
+        assertThat(result1, is(Optional.of("*red")));
+        assertThat(result2, is(Optional.empty()));
+
+        String parsed1 = result1.orElse("unknown");
+        assertThat(parsed1, is("*red"));
+
+        String parsed2 = result2.orElse("unknown");
+        assertThat(parsed2, is("unknown"));
     }
 
     // Function returning Optional
-    private Optional<String> v(String text) {
-        if (text.contains(".")) {
-            return Optional.empty();
-        } else {
-            return Optional.of("*" + text);
-        }
+    private Optional<String> prependStar(String text) {
+        return text.contains(".") ? Optional.empty() : Optional.of("*" + text);
     }
 
 }
