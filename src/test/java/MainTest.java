@@ -1,6 +1,11 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -124,7 +129,7 @@ public class MainTest {
     }
 
     @Test
-    public void optionalReturningFunction() {
+    public void optionalExample() {
 
         Optional<String> result1 = prependStar("red");
         Optional<String> result2 = prependStar("red.");
@@ -148,6 +153,32 @@ public class MainTest {
                 .getMax();
 
         assertThat(lengthOfLongestWord, is(6));
+    }
+
+    @Test
+    public void localDate() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime aWeekAwayFromNow = now.plus(1, ChronoUnit.WEEKS);
+        String formattedDate = aWeekAwayFromNow.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        System.out.print(formattedDate);
+    }
+
+    @Test
+    public void zonedDateDefaultZone() {
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime aWeekAwayFromNow = now.plus(1, ChronoUnit.WEEKS);
+        String formattedDate = aWeekAwayFromNow.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+
+        System.out.print(formattedDate);
+    }
+
+    @Test
+    public void zonedDateChicago() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Chicago"));
+        String formattedDate = now.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+
+        System.out.print(formattedDate);
     }
 
     // Function returning Optional
