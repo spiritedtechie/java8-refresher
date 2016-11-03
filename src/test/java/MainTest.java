@@ -139,6 +139,17 @@ public class MainTest {
         assertThat(parsed2, is("unknown"));
     }
 
+    @Test
+    public void integerSummaryStatistics() {
+
+        int lengthOfLongestWord = stuff.stream()
+                .mapToInt(s -> s.length())
+                .summaryStatistics()
+                .getMax();
+
+        assertThat(lengthOfLongestWord, is(6));
+    }
+
     // Function returning Optional
     private Optional<String> prependStar(String text) {
         return text.contains(".") ? Optional.empty() : Optional.of("*" + text);
